@@ -1,0 +1,15 @@
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
+metadata:
+  name: consul-tls-route
+  namespace: consul
+spec:
+  parentRefs:
+    - name: consul-gateway
+      sectionName: https
+  hostnames:
+    - "consul.sumery.com"
+  rules:
+    - backendRefs:
+        - name: consul-expose-servers
+          port: 8501

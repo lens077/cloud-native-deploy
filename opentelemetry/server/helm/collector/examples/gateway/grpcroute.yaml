@@ -1,0 +1,14 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GRPCRoute
+metadata:
+  name: otel-grpc-route
+  namespace: observability
+spec:
+  parentRefs:
+    - name: observability-gateway # 绑定到上面定义的 Gateway
+  hostnames:
+    - "otel.sumery.com" # 客户端将连接的域名
+  rules:
+    - backendRefs:
+        - name: otel-collector # OTLP Collector Service 名称
+          port: 4317             # OTLP gRPC 端口

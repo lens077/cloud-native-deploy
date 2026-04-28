@@ -1,0 +1,15 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GRPCRoute
+metadata:
+  name: jaeger-otlp-route
+  namespace: observability
+spec:
+  parentRefs:
+    - name: observability-gateway
+      sectionName: grpc-tls
+  hostnames:
+    - "jaeger-collector.sumery.com"
+  rules:
+    - backendRefs:
+        - name: jaeger
+          port: 4317
