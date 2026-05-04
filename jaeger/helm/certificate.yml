@@ -12,10 +12,9 @@ spec:
     # ClusterIssuer是集群级别的颁发者， 在全部命名空间生效
     # Issuer是命名空间的颁发者名，应用在哪个命名空间就在哪个命名空间生效，确保该命名空间存在该Issuer颁发者
     kind: ClusterIssuer
-  commonName: jaeger.sumery.com
+  commonName: jaeger-ui.sumery.com
   # 给哪个域名颁发证书
   dnsNames:
-    - "jaeger.sumery.com"
-    - "jaeger-collector.sumery.com"
-    - "otel.sumery.com"
-    - "grafana.sumery.com"
+    - "jaeger-ui.sumery.com"
+    - "jaeger-grpc.sumery.com"
+    - "jaeger-http.sumery.com"

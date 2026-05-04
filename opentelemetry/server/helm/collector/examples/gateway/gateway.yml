@@ -21,7 +21,7 @@ spec:
       tls:
         mode: Terminate
         certificateRefs:
-          - name: observability-gateway-tls
+          - name: observability-root-ca-secret
       allowedRoutes:
         namespaces:
           from: All

@@ -10,7 +10,7 @@ spec:
     - name: https
       protocol: HTTPS
       port: 443
-      hostname: "*.sumery.com"
+      hostname: "jaeger-ui.sumery.com"
       tls:
         mode: Terminate # 在网关层卸载 TLS
         certificateRefs:

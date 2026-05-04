@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
 	"log"
 	"time"
@@ -17,11 +16,12 @@ import (
 	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 )
 
-// 配置你的 VictoriaMetrics 端点
 const (
-	//4318:30694/TCP
-	// vmEndpoint = "192.168.3.102:31996"
-	vmEndpoint = "otlp.sumery.com"
+	// 4317:30474/TCP
+	// 4318:32719/TCP
+	// 修改为你的 OTEL Collector 地址和端口
+	// vmEndpoint = "192.168.3.100:32719"
+	vmEndpoint = "otlp-http.sumery.com:443"
 
 	// vmURLPath  = "/opentelemetry/v1/metrics"
 )
@@ -33,10 +33,9 @@ func main() {
 	// 这个 Exporter 负责将指标数据发送到你的 VM 端点
 	// WithInsecure() 是必须的，因为你的端点是 http:// 而不是 https://
 	exporter, err := otlpmetrichttp.New(ctx,
-		otlpmetrichttp.WithTLSClientConfig(&tls.Config{InsecureSkipVerify: true}), // 跳过自签名证书， 仅用于开发测试
 		otlpmetrichttp.WithEndpoint(vmEndpoint),
 		// otlpmetrichttp.WithURLPath(vmURLPath),
-		// otlpmetrichttp.WithInsecure(),
+		otlpmetrichttp.WithInsecure(),
 	)
 	if err != nil {
 		log.Fatalf("创建 OTLP exporter 失败: %v", err)

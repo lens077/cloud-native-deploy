@@ -37,7 +37,7 @@ spec:
     namespace: elastic-stack # 指向 Gateway 所在的命名空间
     sectionName: https
   hostnames:
-  - "jaeger.sumery.com"
+  - "jaeger-ui.sumery.com"
   rules:
   - matches:
     - path:

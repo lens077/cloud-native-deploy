@@ -4,6 +4,6 @@ set -o posix errexit -o pipefail
 
 kubectl create secret docker-registry tcr-registry-secret \
   --docker-server=ccr.ccs.tencentyun.com \
-  --docker-username=100023650343 \
-  --docker-password=msdnmm0,. \
+  --docker-username= \
+  --docker-password= \
   -n kafka

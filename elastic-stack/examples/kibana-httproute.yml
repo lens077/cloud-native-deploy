@@ -1,0 +1,19 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: kibana-route
+  namespace: elastic-stack
+spec:
+  parentRefs:
+    - name: elastic-gateway
+  hostnames:
+    - "kibana.sumery.com"
+    - "kb.sumery.com"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: es-kb-quickstart-eck-kibana-kb-http
+          port: 5601

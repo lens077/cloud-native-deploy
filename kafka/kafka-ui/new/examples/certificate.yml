@@ -15,5 +15,4 @@ spec:
   commonName: kafka.sumery.com
   # 给哪个域名颁发证书
   dnsNames:
-    - "kafka.sumery.com"
     - "kafka-ui.sumery.com"

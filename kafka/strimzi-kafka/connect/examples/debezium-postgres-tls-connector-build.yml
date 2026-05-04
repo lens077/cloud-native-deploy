@@ -9,25 +9,25 @@ metadata:
 spec:
   version: 4.2.0
   replicas: 1
-  # kafka bootstrap地址
-  bootstrapServers: my-cluster-kafka-plain-bootstrap:9092
+  bootstrapServers: my-cluster-kafka-bootstrap:9093
+  # ... (TLS、存储Topic等配置)
+  tls:
+    trustedCertificates:
+      - secretName: my-cluster-cluster-ca-cert
+        pattern: "*.crt"
   groupId: my-connect-cluster
   configStorageTopic: my-connect-cluster-configs
   statusStorageTopic: my-connect-cluster-status
   offsetStorageTopic: my-connect-cluster-offsets
   config:
-    # --- 数据库基础配置 ---
-    database.hostname: "postgres-service-host"
-    database.port: "5432"
-    database.user: "postgres"
-    database.password: "password"
-    database.dbname: "postgres"
-    topic.prefix: "ecommerce_cdc"
-
     # 将内部主题的复制因子设为与 kafka broker 数量一致
     config.storage.replication.factor: 1
     offset.storage.replication.factor: 1
     status.storage.replication.factor: 1
+    # 其他可能需要的配置（例如，如果集群启用了 TLS，下面这些可以不用显式写）
+    # security.protocol: SSL
+    # ssl.truststore.type: PEM
+    # ssl.truststore.location: ...
   build:
     output:
       type: docker

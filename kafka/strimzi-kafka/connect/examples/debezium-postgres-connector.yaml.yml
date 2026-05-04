@@ -16,8 +16,34 @@ spec:
     database.dbname: ecommerce
     topic.prefix: ecommerce_cdc
     plugin.name: pgoutput
-    table.include.list: public.orders
+    # 想捕获的表匹配的列表
+    # 显式声明表和schema, 例如:
+    # table.include.list: orders.order_main,orders.order_item
+    # schema.include.list: public
+    # 使用通配符, 例如: 按 schema 捕获: orders\..*,products\..*
+    # schema.include.list: orders\..*,products\..*
+
+    # 在该数据库内捕获所有变更
+    schema.include.list: .*
+    table.include.list: .*\..*
+
+    # 数值处理 (解决 Base64 问题)
+    # 将 Decimal 转换为 float64，这样 应用 读到就是数字，ES 也能直接接受
+    decimal.handling.mode: "double"
+
+    # 消息展平 SMT (解决结构解析问题)
+    # 启用 Debezium 的 ExtractNewRecordState 转换器
     transforms: unwrap
     transforms.unwrap.type: io.debezium.transforms.ExtractNewRecordState
+    # 删除记录时，在消息中添加 __deleted: true 标志
+    transforms.unwrap.delete.handling.mode: rewrite
+    # 发生更新时，如果数据没变是否丢弃 (默认 false)
+    transforms.unwrap.drop.tombstones: true
+
+    # 时间戳处理 (可选)
+    # 将时间戳转为符合 ISO8601 的字符串，方便 ES 自动识别日期, 解决时间戳精度问题 (转换为 Connect 标准格式)
+    time.precision.mode: connect
+
+    # 确保序列化器不带冗余 Schema
     value.converter: org.apache.kafka.connect.json.JsonConverter
     value.converter.schemas.enable: false

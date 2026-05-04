@@ -19,29 +19,7 @@ spec:
       namespaces:
         from: Same
 EOF
-kubectl apply -f es-gateway.yml -n elastic-stack
-
-cat > kibana-gateway.yml <<EOF
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: elastic-gateway
-  namespace: elastic-stack
-spec:
-  gatewayClassName: cilium
-  listeners:
-  - name: https
-    protocol: HTTPS
-    port: 443
-    tls:
-      mode: Terminate # 在网关层解密
-      certificateRefs:
-      - name: elastic-stack-tls-secret # 必须与 Certificate 中的 secretName 一致
-    allowedRoutes:
-      namespaces:
-        from: Same
-EOF
-kubectl apply -f kibana-gateway.yml -n elastic-stack
+kubectl apply -f gateway.yml -n elastic-stack
 
 cat > es-httproute.yml <<EOF
 apiVersion: gateway.networking.k8s.io/v1
@@ -87,7 +65,7 @@ spec:
 EOF
 kubectl apply -f kibana-httproute.yml -n elastic-stack
 
-cat > es-certificate.yml <<EOF
+cat > certificate.yml <<EOF
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -103,4 +81,4 @@ spec:
   - "kibana.sumery.com"
   - "es.sumery.com"
 EOF
-kubectl apply -f es-certificate.yml -n elastic-stack
+kubectl apply -f certificate.yml -n elastic-stack
