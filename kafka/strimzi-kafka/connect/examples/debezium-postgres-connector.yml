@@ -31,6 +31,8 @@ spec:
     # 将 Decimal 转换为 float64，这样 应用 读到就是数字，ES 也能直接接受
     decimal.handling.mode: "double"
 
+    binary.handling.mode: utf8
+
     # 消息展平 SMT (解决结构解析问题)
     # 启用 Debezium 的 ExtractNewRecordState 转换器
     transforms: unwrap
