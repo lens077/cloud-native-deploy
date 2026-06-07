@@ -8,7 +8,7 @@ spec:
     - name: casdoor-gateway
       sectionName: https # 对应 Gateway 的监听器名称
   hostnames:
-    - "casdoor.sumery.com"
+    - "casdoor.app.com"
   rules:
     - matches:
         - path:

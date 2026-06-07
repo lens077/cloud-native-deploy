@@ -8,7 +8,7 @@ spec:
   parentRefs:
     - name: vm-metrics-gateway # 绑定到上面创建的 Gateway
   hostnames:
-    - "vm.sumery.com" # <-- 替换成你希望访问 VictoriaMetrics 的域名
+    - "vm.app.com" # <-- 替换成你希望访问 VictoriaMetrics 的域名
   rules:
     - matches:
         # 匹配所有路径，用于查询和写入API

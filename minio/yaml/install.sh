@@ -14,8 +14,8 @@ metadata:
 spec:
   secretName: minio-tls-secret
   dnsNames:
-    - "minio-ui.sumery.com"
-    - "minio-api.sumery.com"
+    - "minio-ui.app.com"
+    - "minio-api.app.com"
   issuerRef:
     name: selfsigned-issuer # 引用 ClusterIssuer
     kind: ClusterIssuer

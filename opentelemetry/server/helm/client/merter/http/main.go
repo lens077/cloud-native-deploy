@@ -20,7 +20,7 @@ func main() {
 
 	// 1. 创建 gRPC Metrics Exporter，连接到 otel-collector 的 gRPC 端口
 	exporter, err := otlpmetrichttp.New(ctx,
-		otlpmetrichttp.WithEndpoint("otlp-http.sumery.com:443"), // 你的 OTLP gRPC 域名
+		otlpmetrichttp.WithEndpoint("otlp-http.app.com:443"), // 你的 OTLP gRPC 域名
 		otlpmetrichttp.WithTLSClientConfig(&tls.Config{
 			InsecureSkipVerify: true, // 开发环境跳过证书验证
 		}),

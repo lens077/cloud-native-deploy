@@ -20,7 +20,7 @@ func main() {
 	caCertPool.AppendCertsFromPEM(caCert)
 	rdb := redis.NewClient(&redis.Options{
 		// 注意：端口是网关的HTTPS端口，通常是 443
-		Addr: "dragonfly.sumery.com:443",
+		Addr: "dragonfly.app.com:443",
 		// Addr:     "192.168.3.107:6379",
 		Password: "msdnmm", // 如果需要密码，在这里设置
 

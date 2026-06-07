@@ -26,17 +26,17 @@ func main() {
 	}
 
 	// 3. 配置 TLS
-	// 注意：ServerName 必须与证书 DNS Names (postgres.sumery.com 或 pg.sumery.com) 一致
+	// 注意：ServerName 必须与证书 DNS Names (pg-dev.app.com 或 pg.app.com) 一致
 	tlsConfig := &tls.Config{
 		RootCAs:            caCertPool,
-		ServerName:         "postgres.sumery.com",
+		ServerName:         "pg-dev.app.com",
 		InsecureSkipVerify: false, // 设为 false 表示严格验证服务端证书
 	}
 
 	// 4. 配置数据库连接
 	// 如果你改成了 TCPRoute，端口是 443；如果直连 LB，端口是 5432。请根据实际情况修改。
-	// 这里假设你本地 `/etc/hosts` 已经配置了 postgres.sumery.com 指向 192.168.3.119
-	dsn := "host=postgres.sumery.com port=443 user=postgres password=msdnmm dbname=postgres sslmode=require"
+	// 这里假设你本地 `/etc/hosts` 已经配置了 pg-dev.app.com 指向 192.168.3.119
+	dsn := "host=pg-dev.app.com port=5432 user=postgres password=msdnmm dbname=postgres sslmode=require"
 
 	config, err := pgx.ParseConfig(dsn)
 	if err != nil {
@@ -93,12 +93,12 @@ func main() {
 // 	// 2. 配置 TLS
 // 	tlsConfig := &tls.Config{
 // 		RootCAs: caCertPool,
-// 		// ServerName:         "postgres.sumery.com", // 必须与证书中的 CN/SAN 匹配
+// 		// ServerName:         "pg-dev.app.com", // 必须与证书中的 CN/SAN 匹配
 // 		// InsecureSkipVerify: false, // 测试环境若不验证域名可设为 true
 // 	}
 //
 // 	// 3. 构建连接配置
-// 	connStr := "postgres://postgres:msdnmm@pg.sumery.com:443/postgres"
+// 	connStr := "postgres://postgres:msdnmm@pg.app.com:443/postgres"
 // 	// connStr := "postgres://postgres:msdnmm@192.168.3.106:5432/postgres"
 // 	config, err := pgx.ParseConfig(connStr)
 // 	if err != nil {

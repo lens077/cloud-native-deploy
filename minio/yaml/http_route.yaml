@@ -9,7 +9,7 @@ spec:
     - name: minio-gateway
       sectionName: http
   hostnames:
-    - "minio-ui.sumery.com"
+    - "minio-ui.app.com"
   rules:
     - filters:
         - type: RequestRedirect
@@ -29,7 +29,7 @@ spec:
     - name: minio-gateway
       sectionName: https
   hostnames:
-    - "minio-ui.sumery.com"
+    - "minio-ui.app.com"
   rules:
     - matches:
         - path:
@@ -50,7 +50,7 @@ spec:
     - name: minio-gateway
       sectionName: http-api
   hostnames:
-    - "minio-api.sumery.com"
+    - "minio-api.app.com"
   rules:
     - matches:
         - path:

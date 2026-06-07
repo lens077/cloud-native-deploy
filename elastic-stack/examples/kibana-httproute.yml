@@ -7,8 +7,8 @@ spec:
   parentRefs:
     - name: elastic-gateway
   hostnames:
-    - "kibana.sumery.com"
-    - "kb.sumery.com"
+    - "kibana.app.com"
+    - "kb.app.com"
   rules:
     - matches:
         - path:

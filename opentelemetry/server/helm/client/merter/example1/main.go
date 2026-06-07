@@ -21,7 +21,7 @@ const (
 	// 4318:32719/TCP
 	// 修改为你的 OTEL Collector 地址和端口
 	// vmEndpoint = "192.168.3.100:32719"
-	vmEndpoint = "otlp-http.sumery.com:443"
+	vmEndpoint = "otlp-http.app.com:443"
 
 	// vmURLPath  = "/opentelemetry/v1/metrics"
 )

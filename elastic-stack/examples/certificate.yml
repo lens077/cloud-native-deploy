@@ -8,8 +8,8 @@ spec:
   issuerRef:
     name: selfsigned-issuer # 替换为你集群中的 ClusterIssuer 或 Issuer 名称
     kind: ClusterIssuer
-  commonName: kibana.sumery.com
+  commonName: kibana.app.com
   dnsNames:
-    - "es.sumery.com"
-    - "kibana.sumery.com"
-    - "kb.sumery.com"
+    - "es.app.com"
+    - "kibana.app.com"
+    - "kb.app.com"

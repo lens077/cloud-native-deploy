@@ -15,7 +15,7 @@ spec:
     - name: https
       protocol: HTTPS
       port: 443
-      hostname: "*.sumery.com"
+      hostname: "*.app.com"
       tls:
         mode: Terminate
         certificateRefs:

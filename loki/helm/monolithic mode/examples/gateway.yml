@@ -9,7 +9,7 @@ spec:
     - name: https
       port: 443
       protocol: HTTPS
-      hostname: "loki.sumery.com"
+      hostname: "loki.app.com"
       tls:
         mode: Terminate
         certificateRefs:

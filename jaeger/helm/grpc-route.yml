@@ -8,7 +8,7 @@ spec:
     - name: observability-gateway
       sectionName: https
   hostnames:
-    - "jaeger-grpc.sumery.com"
+    - "jaeger-grpc.app.com"
   rules:
     - backendRefs:
         - name: jaeger

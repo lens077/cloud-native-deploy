@@ -28,7 +28,7 @@ spec:
     table.include.list: .*\..*
 
     # 数值处理 (解决 Base64 问题)
-    # 将 Decimal 转换为 float64，这样 应用 读到就是数字，ES 也能直接接受
+    # 将 Decimal 转换为 float64，这样 应用 读到就是数字
     decimal.handling.mode: "double"
 
     binary.handling.mode: utf8

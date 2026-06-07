@@ -9,7 +9,7 @@ spec:
     - name: observability-gateway # 绑定到上面创建的 Gateway
       sectionName: https
   hostnames:
-    - "grafana.sumery.com" # <-- 替换成你希望访问 Grafana 的域名
+    - "grafana.app.com" # <-- 替换成你希望访问 Grafana 的域名
   rules:
     - matches:
         - path:

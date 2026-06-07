@@ -6,8 +6,8 @@ metadata:
 spec:
   secretName: minio-tls-secret # 关键！这是最终生成的 Secret 名字，必须固定
   dnsNames:
-    - "minio-ui.sumery.com"
-    - "minio-api.sumery.com"
+    - "minio-ui.app.com"
+    - "minio-api.app.com"
   issuerRef:
     name: selfsigned-global-issuer
     kind: ClusterIssuer

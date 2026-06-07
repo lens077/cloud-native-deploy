@@ -21,7 +21,7 @@ import (
 const (
 	//4318:30694/TCP
 	// vmEndpoint = "192.168.3.102:31996"
-	vmEndpoint = "otlp.sumery.com"
+	vmEndpoint = "otlp.app.com"
 
 	// vmURLPath  = "/opentelemetry/v1/metrics"
 )

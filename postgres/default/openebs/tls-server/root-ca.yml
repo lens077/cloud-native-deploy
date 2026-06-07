@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: postgres-root-ca
+  namespace: postgres
+spec:
+  isCA: true # 声明它是 CA
+  commonName: postgres-internal-root-ca
+  secretName: postgres-root-ca-secret
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: selfsigned-global-issuer
+    kind: ClusterIssuer

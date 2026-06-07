@@ -31,7 +31,7 @@ spec:
   parentRefs:
   - name: elastic-gateway
   hostnames:
-  - "es.sumery.com"
+  - "es.app.com"
   rules:
   - matches:
     - path:
@@ -53,7 +53,7 @@ spec:
   parentRefs:
   - name: elastic-gateway
   hostnames:
-  - "kibana.sumery.com"
+  - "kibana.app.com"
   rules:
   - matches:
     - path:
@@ -76,9 +76,9 @@ spec:
   issuerRef:
     name: selfsigned-issuer # 替换为你集群中的 ClusterIssuer 或 Issuer 名称
     kind: ClusterIssuer
-  commonName: kibana.sumery.com
+  commonName: kibana.app.com
   dnsNames:
-  - "kibana.sumery.com"
-  - "es.sumery.com"
+  - "kibana.app.com"
+  - "es.app.com"
 EOF
 kubectl apply -f certificate.yml -n elastic-stack

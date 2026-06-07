@@ -7,7 +7,7 @@ spec:
   parentRefs:
     - name: elastic-gateway
   hostnames:
-    - "es.sumery.com"
+    - "es.app.com"
   rules:
     - matches:
         - path:

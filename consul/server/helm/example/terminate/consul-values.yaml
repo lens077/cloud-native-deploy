@@ -1,10 +1,3 @@
-#!/usr/bin/env bash
-# 启用 POSIX 模式并设置严格的错误处理机制
-set -o posix errexit -o pipefail
-# 查询ca,crt和key的名称
-kubectl describe secret consul-gateway-tls-secret -n consul
-
-cat > consul-tls-values.yml <<EOF
 # Source Config 1: https://developer.hashicorp.com/consul/tutorials/get-started-kubernetes/kubernetes-gs-deploy?variants=consul-deploy%3Aself-managed
 # Source Config 2: https://developer.hashicorp.com/consul/docs/k8s/helm
 # Source Config 3: https://juejin.cn/post/6993723824667639845
@@ -21,12 +14,12 @@ global:
     enableAutoEncrypt: true
     caCert:
       # 存储 CA 证书的 Kubernetes 或 Vault 名称。
-      secretName: "consul-root-ca-secret"
+      secretName: "consul-gateway-tls-secret"
       # Kubernetes 或 Vault 秘密中保存 CA 证书的密钥。
       secretKey: "ca.crt"
     # 必须提供 CA 的 Key，以便 Consul 自动为内部 Server/Client 签发证书
     caKey:
-      secretName: "consul-root-ca-secret"
+      secretName: "consul-gateway-tls-secret"
       secretKey: "tls.key"
 
     # 是否强制开启 HTTPS, 如果是true,那么端口号+1,例如8500就是8501,而不是默认的8500的HTTP端口
@@ -34,8 +27,7 @@ global:
 
     # 如果你的 Gateway 需要通过特定的域名访问 UI 或 API
     serverAdditionalDNSSANs:
-      - "consul.sumery.com" # 换成你证书里对应的域名
-      - "localhost"
+      - "consul.app.com" # 换成你证书里对应的域名
     # 是否需要验证证书
     verify: false
   #  enable: true
@@ -58,12 +50,12 @@ ui:
     enable: true
     #    type: LoadBalancer
     type: LoadBalancer
-#    port:
-#      http: 80
-#      https: 443
-#    nodePort:
-#      http: 31080
-#      https: 31443
+  #    port:
+  #      http: 80
+  #      https: 443
+  #    nodePort:
+  #      http: 31080
+  #      https: 31443
   # Enables displaying metrics in the Consul UI.
   metrics:
     enabled: false
@@ -107,17 +99,3 @@ server:
   # 让 Consul Pod 直接使用宿主机的网络栈，以 节点内网 IP 作为广告地址。只要节点 IP 在虚拟机重启后保持不变（大部分云平台 / 内网 DHCP 预留都满足），Consul 集群就不会因 Pod IP 变动而出错。
   hostNetwork: true
   dnsPolicy: ClusterFirstWithHostNet
-EOF
-
-helm uninstall consul -n consul
-kubectl delete pvc -n consul data-consul-consul-server-0
-helm upgrade --install consul ./consul \
-  --create-namespace \
-  -n consul \
-  -f consul-tls-values.yml
-
-#
-#cat /tmp/consul-local-kv.json | consul kv import -http-addr=https://localhost:8501 -ca-file=/tmp/consul-ca1.crt -
-#cat /tmp/consul-local-kv.json | consul kv import -http-addr=http://localhost:8501 -ca-file=/tmp/consul-ca1.crt -
-#cat /tmp/consul-local-kv.json | consul kv import -http-addr=http://localhost:8501 -ca-file=/tmp/consul-ca2.crt -
-#cat /tmp/consul-local-kv.json | consul kv import -http-addr=https://localhost:8501 -ca-file=/tmp/consul-ca2.crt -

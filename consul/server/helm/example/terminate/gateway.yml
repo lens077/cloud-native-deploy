@@ -6,9 +6,9 @@ metadata:
 spec:
   # Cilium Gateway 支持 Gateway API 规范提供的地址 。spec.addresses 字段用于指定网关的 IP 地址。
   #该功能仅支持 IPAddress 类型的地址，并适用于 LB-IPAM。有关详细信息，请参阅 LoadBalancer IP 地址管理 （LB IPAM）。
-  #addresses:
-  # - type: IPAddress
-  #   value: 192.168.3.105
+  addresses:
+   - type: IPAddress
+     value: 192.168.3.106
   gatewayClassName: cilium
   listeners:
     #    - allowedRoutes:

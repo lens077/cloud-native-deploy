@@ -27,7 +27,7 @@ var (
 // 4317:30969/TCP
 // 4318:30694/TCP
 // const collectorEndpoint = "192.168.3.100:30694"
-const collectorEndpoint = "otlp-http.sumery.com:443"
+const collectorEndpoint = "otlp-http.app.com:443"
 
 // OTLP 日志的标准 HTTP 路径
 // const collectorURLPath = "/v1/logs"

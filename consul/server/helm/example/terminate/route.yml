@@ -8,7 +8,7 @@ spec:
     - name: consul-gateway
       sectionName: https # 对应 Gateway 的监听器名称
   hostnames:
-    - "consul.sumery.com"
+    - "consul.app.com"
   rules:
     - matches:
         - path:

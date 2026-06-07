@@ -8,7 +8,7 @@ spec:
     - name: observability-gateway # 绑定到您的 Gateway 名称
       sectionName: https
   hostnames:
-    - "otlp-http.sumery.com"
+    - "otlp-http.app.com"
   rules:
     # OTLP 规范要求数据上报到 /v1/traces, /v1/metrics, 或 /v1/logs 路径下
     - backendRefs:
