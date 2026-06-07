@@ -78,6 +78,8 @@ kubectl create configmap my-postgres-all-in-one-config \
 
 # 让 StatefulSet 的 Pod 滚动更新，重新读取新的 ConfigMap
 # kubectl rollout restart statefulset postgres-postgresql -n postgres || true
+# 或者在数据库容器执行
+# SELECT pg_reload_conf();
 
 # 自动生成TLS证书. pvc被删除重建时会重新生成证书
 cat > pg_conf.yml <<EOF

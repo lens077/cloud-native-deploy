@@ -16,14 +16,6 @@ spec:
   statusStorageTopic: my-connect-cluster-status
   offsetStorageTopic: my-connect-cluster-offsets
   config:
-    # --- 数据库基础配置 ---
-    database.hostname: "postgres-service-host"
-    database.port: "5432"
-    database.user: "postgres"
-    database.password: "password"
-    database.dbname: "postgres"
-    topic.prefix: "ecommerce_cdc"
-
     # 将内部主题的复制因子设为与 kafka broker 数量一致
     config.storage.replication.factor: 1
     offset.storage.replication.factor: 1

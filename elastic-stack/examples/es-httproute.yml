@@ -5,7 +5,7 @@ metadata:
   namespace: elastic-stack
 spec:
   parentRefs:
-    - name: elastic-gateway
+    - name: cilium-gateway
   hostnames:
     - "es.app.com"
   rules:

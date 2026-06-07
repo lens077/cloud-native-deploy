@@ -29,7 +29,28 @@ eck-kibana:
         disabled: true
 EOF
 
-helm upgrade --install es-kb-quickstart\
+#cat > es-disable-tls.yml <<EOF
+## 必须是子 Chart 的真实注册名称：elasticsearch
+#elasticsearch:
+#  spec:
+#    http:
+#      tls:
+#        selfSignedCertificate:
+#          disabled: true
+#
+## 必须是子 Chart 的真实注册名称：kibana
+#kibana:
+#  spec:
+#    http:
+#      tls:
+#        selfSignedCertificate:
+#          disabled: true
+#EOF
+
+kubectl get pvc -n elastic-stack
+kubectl delete pvc -n eck-stack elasticsearch-data-elasticsearch-es-default-0
+helm uninstall es-kb-quickstart -n elastic-stack || true
+helm upgrade --install es-kb-quickstart \
   ./eck-stack \
   -n elastic-stack \
   --create-namespace \

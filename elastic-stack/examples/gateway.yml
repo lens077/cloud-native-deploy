@@ -6,13 +6,6 @@ metadata:
 spec:
   gatewayClassName: cilium
   listeners:
-    - name: https
-      protocol: HTTPS
-      port: 443
-      tls:
-        mode: Terminate # 在网关层解密
-        certificateRefs:
-          - name: elastic-stack-tls-secret # 必须与 Certificate 中的 secretName 一致
-      allowedRoutes:
-        namespaces:
-          from: Same
+    - name: http
+      protocol: HTTP
+      port: 80
