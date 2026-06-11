@@ -20,16 +20,16 @@
 # 操作步骤
 第0步: 创建集群issuer, 仅需执行一次
 ```yaml
-# selfsigned-global-issuer.yml
+# global-ca-issuer.yml
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: selfsigned-global-issuer
+  name: global-ca-issuer
 spec:
   selfSigned: {}
 ```
 
-第一步：创建 Root CA 种子由 selfsigned-global-issuer 签发一个持久的根证书。
+第一步：创建 Root CA 种子由 global-ca-issuer 签发一个持久的根证书。
 ```yaml
 # root-ca.yml
 apiVersion: cert-manager.io/v1
@@ -45,7 +45,7 @@ spec:
     algorithm: ECDSA
     size: 256
   issuerRef:
-    name: selfsigned-global-issuer
+    name: global-ca-issuer
     kind: ClusterIssuer
 ```
 
@@ -88,7 +88,7 @@ kubectl delete certificaterequest -n <namespace> --all
 ```
 3. 应用新配置
 ```shell
-kubectl apply -f ./selfsigned-global-issuer.yml -n <namespace>
+kubectl apply -f ./global-ca-issuer.yml -n <namespace>
 kubectl apply -f ./root-ca.yml -n <namespace>
 kubectl apply -f ./issuer.yml -n <namespace>
 kubectl apply -f ./internal-issuer.yml -n <namespace>

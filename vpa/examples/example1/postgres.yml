@@ -1,0 +1,21 @@
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: postgres-vpa
+  namespace: postgres
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: postgres-postgresql
+  updatePolicy:
+    updateMode: "Off"        # ← 必须用引号，防止被解释为布尔值
+  resourcePolicy:
+    containerPolicies:
+      - containerName: "*"
+        minAllowed:
+          cpu: "500m"
+          memory: 1Gi
+        maxAllowed:
+          cpu: "2"
+          memory: 4Gi
