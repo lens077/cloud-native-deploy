@@ -53,7 +53,7 @@ tls:
     # -- cert-manager issuer kind. Usually Issuer or ClusterIssuer
     kind: ClusterIssuer
     # -- name of the referenced issuer
-    name: selfsigned-global-issuer
+    name: global-ca-issuer
   # -- use TLS certificates from existing secret
   existing_secret: ""
   # -- TLS certificate

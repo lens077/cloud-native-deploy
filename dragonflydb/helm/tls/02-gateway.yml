@@ -8,7 +8,7 @@ spec:
   #该功能仅支持 IPAddress 类型的地址，并适用于 LB-IPAM。有关详细信息，请参阅 LoadBalancer IP 地址管理 （LB IPAM）。
   addresses:
    - type: IPAddress
-     value: 192.168.3.113
+     value: 192.168.3.114
   gatewayClassName: cilium
   listeners:
     #    - allowedRoutes:
@@ -17,7 +17,7 @@ spec:
     - name: https
       # 开启特权端口参数才能使用1023以下的端口
       port: 443
-      protocol: HTTPS
+      protocol: TLS
       tls:
         mode: Terminate
         certificateRefs:
@@ -25,4 +25,3 @@ spec:
       allowedRoutes:
         namespaces:
           from: Same
-

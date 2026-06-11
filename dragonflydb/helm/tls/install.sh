@@ -80,7 +80,7 @@ tls:
     # -- cert-manager issuer kind. Usually Issuer or ClusterIssuer
     kind: ClusterIssuer
     # -- name of the referenced issuer
-    name: selfsigned-global-issuer
+    name: global-ca-issuer
   # -- use TLS certificates from existing secret
   existing_secret: "dragonfly-gateway-tls-secret"
   # -- TLS certificate
@@ -105,7 +105,7 @@ storage:
   # -- If /data should persist. This will provision a StatefulSet instead.
   enabled: false
   # -- Global StorageClass for Persistent Volume(s)
-  storageClassName: ""
+  storageClassName: "openebs-lvmpv"
   # -- Volume size to request for the PVC
   requests: 128Mi
 EOF
