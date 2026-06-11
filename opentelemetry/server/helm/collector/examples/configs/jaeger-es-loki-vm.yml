@@ -4,6 +4,7 @@ metadata:
   name: otel
   namespace: observability
 spec:
+  mode: daemonset # DaemonSet 模式才能采集每台虚拟机的指标
   config:
     receivers:
       otlp:
@@ -13,12 +14,26 @@ spec:
           http:
             endpoint: 0.0.0.0:4318
 
+      # host_metrics 接收器
+      host_metrics:
+        root_path: /hostfs # 指向容器内挂载的宿主机根路径
+        collection_interval: 10s # 本地环境 10s 即可，降低 CPU 消耗
+        scrapers:
+          cpu:
+          load:
+          memory:
+          disk:
+          network:
+          filesystem:
+            exclude_mount_points:
+              mount_points: ["/dev", "/proc", "/sys"]
+              match_type: strict
     processors:
       # 批处理器
       batch:
         # 避免每一条数据都发一个网络请求，从而降低 CPU 消耗和网络负载。
         # 减少网络请求次数，提高传输效率, 到达该参数的值才打包发送
-        send_batch_size: 1000
+        send_batch_size: 800
         # 保证数据的实时性，防止在低流量时数据卡在内存里发不出去
         # 如果等待了设定的值还没攒满send_batch_size的值，不管有多少，直接强行发走
         timeout: 5s
@@ -40,7 +55,7 @@ spec:
 
     exporters:
       # 把 trace 发送给 Jaeger 的 OTLP 端口
-      otlp/jaeger:
+      otlp_grpc/jaeger:
         endpoint: jaeger.observability.svc:4317   # Jaeger 的 Service 名和端口
         tls:
           insecure: true   # 集群内通信一般无需 TLS
@@ -64,15 +79,15 @@ spec:
         traces:
           receivers: [ otlp ]
           processors: [ memory_limiter, k8s_attributes, batch ]
-          exporters: [ otlp/jaeger ]
+          exporters: [ otlp_grpc/jaeger ]
         metrics:
-          receivers: [otlp]
-          processors: [memory_limiter, k8s_attributes, batch]
-          exporters: [otlp_http/victoriametrics]
+          receivers: [ otlp,host_metrics ]
+          processors: [ memory_limiter, batch ]
+          exporters: [ otlp_http/victoriametrics ]
         logs:
-          receivers: [otlp]
-          processors: [memory_limiter, k8s_attributes, batch]
-          exporters: [otlp_http/loki]
+          receivers: [ otlp ]
+          processors: [ memory_limiter, k8s_attributes, batch ]
+          exporters: [ otlp_http/loki ]
 
       telemetry:
         metrics:
@@ -87,3 +102,14 @@ spec:
     extensions:
       health_check:
         endpoint: 0.0.0.0:13133
+
+  # 注入宿主机根路径卷挂载，供 host_metrics 读取
+  volumes:
+    - name: hostfs
+      hostPath:
+        path: /
+  volumeMounts:
+    - name: hostfs
+      mountPath: /hostfs
+      readOnly: true
+      mountPropagation: HostToContainer
