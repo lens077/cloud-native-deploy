@@ -28,31 +28,27 @@ config:
         Health_Check On
         scheduler.cap 2000
         scheduler.base 5
+        # 优化：磁盘缓冲保护
+        storage.path /var/log/fluent-bit/buffer
+        storage.sync normal
+        storage.checksum off
+        storage.backlog.mem_limit 10M
 
   inputs: |
-    [INPUT]
-        Name                 node_exporter_metrics
-        Tag                  node_metrics
-        Scrape_interval      2
-
     [INPUT]
         Name tail
         Path /var/log/containers/*.log
         multiline.parser docker, cri
         Tag kube.*
-        Mem_Buf_Limit 5MB
+        Mem_Buf_Limit 15MB
         Skip_Long_Lines On
+        storage.type filesystem
 
     [INPUT]
         Name systemd
-        Tag host.*
+        Tag host.kubelet
         Systemd_Filter _SYSTEMD_UNIT=kubelet.service
         Read_From_Tail On
-
-    [INPUT]
-        Name                 dummy
-        Tag                  dummy.log
-        Rate                 3
 
   filters: |
     [FILTER]
@@ -61,13 +57,15 @@ config:
         Merge_Log           On
         Keep_Log            On
         Labels              On
-        Annotations         On
+        # 开发环境关闭注解采集，极大减小元数据体积与内存消耗
+        Annotations         Off
         Kube_URL            https://kubernetes.default.svc:443
         Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
         Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
         Kube_Meta_Cache_TTL 600
-        Use_Kubelet          Off
+        Use_Kubelet         Off
 
+    # 合规数据脱敏
     [FILTER]
         Name                lua
         Match               kube.*
@@ -75,78 +73,58 @@ config:
         code                function sanitize_log(tag, timestamp, record) if record["email"] ~= nil then record["email"] = string.gsub(record["email"], "(.+)@", "***@") end if record["phone"] ~= nil then record["phone"] = string.gsub(record["phone"], "(%d{3})%d{4}(%d{4})", "%1****%2") end record["business_line"] = "ecommerce" return 2, timestamp, record end
 
     [FILTER]
-        Name                modify
+        Name                nest
         Match               kube.*
-        Rename              kubernetes_namespace_name k8s.namespace.name
-        Rename              kubernetes_pod_name k8s.pod.name
-        Rename              kubernetes_container_name k8s.container.name
-        Rename              kubernetes_host k8s.node.name
-        Remove              kubernetes_docker_id
-        Remove              kubernetes_pod_id
-        Remove              stream
-        Condition           Key_Value_Equals log_level WARN
-        Set                 log_level WARNING
+        Operation           lift
+        Nested_under        kubernetes
+        Add_prefix          k8s.
 
     [FILTER]
         Name                throttle
         Match               kube.*
-        Rate                100
-        Window              60
-        Interval            1m
+        Rate                500
+        Window              5
         Print_Status        true
 
   outputs: |
-    # Loki: 专用于发送 K8s 容器日志
+    # Loki: 专用于接收规范化后的 K8s 容器日志
     [OUTPUT]
         Name                 loki
         Match                kube.*
-        Host                 loki.loki.svc.cluster.local
+        Host                 loki.loki.svc
         Port                 3100
-        Label_keys           $kubernetes['pod_name'], $kubernetes['namespace_name'], $kubernetes['container_name']
+        Label_keys           $k8s.pod_name, $k8s.namespace_name, $k8s.container_name, $business_line
         Line_format          json
         Labels               job=kube-logs
-        Buffer_Size          1MB
+        buffer_size          1MB
         Retry_Limit          5
         Tls                  Off
 
-    # OpenTelemetry: 专用于发送指标、追踪和系统日志
+    # OpenTelemetry: 专用于接收非容器的系统级组件日志
     [OUTPUT]
         Name                  opentelemetry
-        Match                 node_metrics, host.*, dummy.log
-        Host                  otel-collector.observability.svc.cluster.local
+        Match                 host.*
+        Host                  otel-collector.observability.svc
         Port                  4318
-        Metrics_uri           /v1/metrics
         Logs_uri              /v1/logs
-        Traces_uri            /v1/traces
         compress              gzip
         http2                 on
         Tls                   Off
-        Tls.verify            Off
-        # 映射字段
         logs_body_key         $message
-        logs_trace_id_message_key  trace_id
-        logs_span_id_message_key   span_id
         logs_severity_text_message_key log_level
-        logs_severity_number_message_key severity_number
-        # 标签
         add_label             app fluent-bit
-        add_label             color blue
         add_label             env production
         add_label             region cn-east
-        # 网络与性能设置
         net.connect_timeout   10s
         net.io_timeout        30s
         Retry_Limit           3
-        Batch_Size            500
-        log_response_payload  false
-        workers               2
-
+        workers               1
 EOF
 cat > image.yml <<EOF
 image:
   #repository: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/fluent/fluent-bit
-  repository: fluent/fluent-bit
-  tag: 5.0.2-arm64
+  repository: docker.io/fluent/fluent-bit
+  tag: 5.0.7-arm64
   digest:
   pullPolicy: IfNotPresent
 EOF
@@ -157,5 +135,3 @@ helm upgrade --install fluent-bit ./fluent-bit \
   -n observability \
   -f otel-fluent-bit-values.yml \
   -f image.yml
-
-set +x
