@@ -2,6 +2,9 @@
 # 启用 POSIX 模式并设置严格的错误处理机制
 set -o posix errexit -o pipefail
 
+mkdir -pv /home/kubernetes/kafka/ui
+cd /home/kubernetes/kafka/ui
+
 helm repo add kafbat-ui https://kafbat.github.io/helm-charts
 helm install kafbat-ui kafbat-ui/kafka-ui
 
@@ -15,7 +18,7 @@ yamlApplicationConfig:
   kafka:
     clusters:
       - name: my-cluster
-        bootstrapServers:  my-cluster-kafka-bootstrap:9092
+        bootstrapServers: my-cluster-kafka-bootstrap:9092
   auth:
     type: disabled
   management:
@@ -32,7 +35,7 @@ resources:
     cpu: 200m
     memory: 512Mi
   requests:
-    cpu: 200m
+    cpu: 100m
     memory: 256Mi
 EOF
 

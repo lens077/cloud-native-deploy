@@ -6,8 +6,9 @@ metadata:
   namespace: observability
 spec:
   parentRefs:
-    - name: observability-gateway # 绑定到上面创建的 Gateway
-      sectionName: https
+    - name: cilium-gateway # 绑定到上面创建的 Gateway
+      sectionName: http
+      namespace: default
   hostnames:
     - "grafana.app.com" # <-- 替换成你希望访问 Grafana 的域名
   rules:

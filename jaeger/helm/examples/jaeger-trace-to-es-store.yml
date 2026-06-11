@@ -43,7 +43,7 @@ userconfig:
             auth:
               basic:
                 username: elastic
-                password: XwjLbwoaCLvuJ7PwaAWtBkNO
+                password: oGubUGYjGH29xlOuCYuCOSvw
             indices:
               index_prefix: "ecommerce"
     jaeger_query:
@@ -79,7 +79,7 @@ storage:
   elasticsearch:
     url: http://elasticsearch-es-http.elastic-stack:9200
     user: elastic
-    password: XwjLbwoaCLvuJ7PwaAWtBkNO
+    password: oGubUGYjGH29xlOuCYuCOSvw
     tls:
       enabled: false
 

@@ -15,6 +15,28 @@ helm repo update
 helm pull grafana/grafana
 tar -zxvf grafana*.tgz
 
+cat > grafana_alert.yml <<EOF
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-grafana-alerts
+  labels:
+    grafana_alert: "1"      # 这个标签让 Sidecar 能够发现它
+data:
+  alerts.yaml: |
+    apiVersion: 1
+    groups:
+      - name: high_error_rate
+        # interval: 30s          # 可以省略，使用 Grafana 全局默认值（通常 10s）
+        rules:
+          - alert: HighErrorRate
+            expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
+            for: 2m              # 必填，且不能为空
+            annotations:
+              summary: "High error rate detected"
+EOF
+kubectl apply -f grafana_alert.yml -n observability
+
 cat > new-values.yml <<EOF
 # https://github.com/grafana-community/helm-charts/blob/main/charts/grafana/values.yaml
 persistence:
@@ -34,7 +56,22 @@ service:
   loadBalancerSourceRanges: []
   port: 80
   targetPort: 3000
+resources:
+  limits:
+    cpu: 0.5
+    memory: 512Mi
 
+# Grafana 主配置
+grafana.ini:
+  metrics:
+    enable_metrics_source_cache: true
+    metrics_source_cache_ttl_seconds: 300
+  dataproxy:
+    concurrent_query_count: 20
+sidecar:
+  alerts:
+    enabled: true
+    label: grafana_alert
 EOF
 
 # 默认安装的是使用临时存储
@@ -43,7 +80,6 @@ helm upgrade --install grafana ./grafana \
 --create-namespace \
 -n observability \
 -f new-values.yml
-
 
 # 获取密码, 账号默认是admin
 kubectl get secret --namespace observability grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo

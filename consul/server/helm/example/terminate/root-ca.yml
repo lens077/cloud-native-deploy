@@ -11,5 +11,5 @@ spec:
     algorithm: ECDSA
     size: 256
   issuerRef:
-    name: selfsigned-global-issuer
+    name: global-ca-issuer
     kind: ClusterIssuer

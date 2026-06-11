@@ -6,7 +6,9 @@ metadata:
   namespace: victoriametrics
 spec:
   parentRefs:
-    - name: vm-metrics-gateway # 绑定到上面创建的 Gateway
+    - name: cilium-gateway # 绑定到上面创建的 Gateway
+      namespace: default
+      sectionName: http
   hostnames:
     - "vm.app.com" # <-- 替换成你希望访问 VictoriaMetrics 的域名
   rules:

@@ -9,6 +9,6 @@ spec:
     - "minio-ui.app.com"
     - "minio-api.app.com"
   issuerRef:
-    name: selfsigned-global-issuer
+    name: global-ca-issuer
     kind: ClusterIssuer
     group: cert-manager.io

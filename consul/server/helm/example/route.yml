@@ -5,8 +5,9 @@ metadata:
   namespace: consul
 spec:
   parentRefs:
-    - name: consul-gateway
-      sectionName: https # 对应 Gateway 的监听器名称
+    - name: cilium-gateway
+      sectionName: http # 对应 Gateway 的监听器名称
+      namespace: default
   hostnames:
     - "consul.app.com"
   rules:

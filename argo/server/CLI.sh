@@ -100,7 +100,7 @@ argocd proj add-source frontend https://gitlab.com/lookeke/full-stack-engineerin
 # 添加集群与命名空间
 # argocd proj add-destination <PROJECT> <CLUSTER>,<NAMESPACE>
 # argocd proj remove-destination <PROJECT> <CLUSTER>,<NAMESPACE>
-argocd proj add-destination frontend https://192.168.2.160:6443 frontend
+argocd proj add-destination frontend https://192.168.2.105:6443 frontend
 
 # 创建仓库秘钥
 cat > gitlab-secret.yml <<EOF

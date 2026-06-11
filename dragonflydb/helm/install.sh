@@ -10,7 +10,7 @@ set -o posix errexit -o pipefail
 mkdir -p /home/kubernetes/dragonflydb
 cd /home/kubernetes/dragonflydb
 
-VERSION=v1.37.2
+VERSION=v1.39.0
 helm pull oci://ghcr.io/dragonflydb/dragonfly/helm/dragonfly --version $VERSION
 
 tar -zxvf dragonfly-$VERSION.tgz
@@ -32,7 +32,7 @@ image:
   repository: docker.dragonflydb.io/dragonflydb/dragonfly
 service:
   # -- Service type to provision. Can be NodePort, ClusterIP or LoadBalancer
-  type: ClusterIP
+  type: LoadBalancer
   port: 6379
 serviceMonitor:
   # -- If true, a ServiceMonitor CRD is created for a prometheus operator
@@ -53,7 +53,7 @@ resources:
   #   cpu: 100m
   #   memory: 128Mi
   # -- The resource limits for the containers
-  limits: {}
+  limits:
     cpu: 100m
     memory: 512Mi
 

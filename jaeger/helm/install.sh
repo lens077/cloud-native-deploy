@@ -1,6 +1,9 @@
 helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
 helm repo update
 
+helm pull jaegertracing/jaeger
+tar -zxvf jaeger-*.tgz
+
 # https://github.com/jaegertracing/helm-charts/blob/main/charts/jaeger/values.yaml
 cat > jaeger-values.yml <<EOF
 jaeger:
@@ -49,7 +52,7 @@ userconfig:
             auth:
               basic:
                 username: elastic
-                password: XwjLbwoaCLvuJ7PwaAWtBkNO
+                password: oGubUGYjGH29xlOuCYuCOSvw
             indices:
               index_prefix: "ecommerce"
     jaeger_query:
@@ -85,7 +88,7 @@ storage:
   elasticsearch:
     url: http://elasticsearch-es-http.elastic-stack:9200
     user: elastic
-    password: XwjLbwoaCLvuJ7PwaAWtBkNO
+    password: oGubUGYjGH29xlOuCYuCOSvw
     tls:
       enabled: false
 

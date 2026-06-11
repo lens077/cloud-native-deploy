@@ -30,7 +30,7 @@ tenant:
       volumesPerServer: 1
       ###
       # The capacity per volume requested per MinIO Tenant Pod.
-      size: 10Gi
+      size: 20Gi
       ###
       # The `storageClass <https://kubernetes.io/docs/concepts/storage/storage-classes/>`__ to associate with volumes generated for this pool.
       #
@@ -38,6 +38,10 @@ tenant:
       # Please make sure to set xfs for "csi.storage.k8s.io/fstype" parameter under StorageClass.parameters.
       # Docs: https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/master/docs/parameters.md
       storageClassName: openebs-lvmpv
+  image:
+    repository: pgsty/minio
+    tag: latest
+    pullPolicy: IfNotPresent
 EOF
 
 # 全新安装
@@ -80,7 +84,7 @@ spec:
     v1.min.io/tenant: myminio
   type: $svc_type
 EOF
-kubectl apply -f myminio-hl-svc.yaml
+kubectl apply -f myminio-hl-svc.yamlkl
 
 # 自动TLS， 使用k8s dns：https://minio.minio.svc.cluster.local
 # 完整文档：https://docs.min.io/community/minio-object-store/operations/network-encryption.html#minio-tls-kubernetes

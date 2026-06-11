@@ -12,18 +12,14 @@ cd /home/kubernetes/minio
 helm repo add minio https://operator.min.io/
 helm search repo minio/operator
 helm pull minio/operator
-
-# 解压
 tar -zxvf operator-*.tgz
 
 # 按需修改, 不需要修改也可启动
 # vi values.yaml
 
-helm install \
-  --namespace minio-operator \
-  --create-namespace \
-  minio ./operator \
-  -f ./operator/values.yaml
+helm upgrade --install minio-operator ./operator \
+  --namespace minio \
+  --create-namespace
 
 # TLS TODO
 # https://www.minio.org.cn/docs/minio/kubernetes/upstream/operations/network-encryption.html#cas

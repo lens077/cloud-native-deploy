@@ -47,7 +47,7 @@ spec:
 # 测试
 进入一个带有curl工具的Pod来检查
 ```shell
-kubectl exec -it casdoor-6fbdbb555f-lls22 -n casdoor -- curl -u elastic:XwjLbwoaCLvuJ7PwaAWtBkNO http://elasticsearch-es-http.elastic-stack:9200/_cat/indices?v
+kubectl exec -it casdoor-6fbdbb555f-lls22 -n casdoor -- curl -u elastic:oGubUGYjGH29xlOuCYuCOSvw http://elasticsearch-es-http.elastic-stack:9200/_cat/indices?v
 ```
 如果包含index，默认为`ecommerce-jaeger`的索引，那么证明jaeger已经存储数据到了es中
 输出示例：

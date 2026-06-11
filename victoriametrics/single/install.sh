@@ -29,7 +29,7 @@ helm upgrade --install vm-single ./victoria-metrics-single/ \
   --reuse-values \
   --set server.persistentVolume.storageClassName=openebs-lvmpv \
   --set server.persistentVolume.size=8Gi \
-  --set server.service.type=NodePort \
+  --set server.service.type=ClusterIP \
   -f vm-values.yaml
 
 kubectl get pvc -n victoriametrics

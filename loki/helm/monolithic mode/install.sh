@@ -16,8 +16,6 @@ singleBinary:
   resources:
     limits:
       memory: 512Mi
-    requests:
-      memory: 256Mi
 
 # chunksCache是一个 memcached 实例，用来缓存从 MinIO 读取的日志块
 chunksCache:
@@ -82,9 +80,9 @@ loki:
       chunks: chunks
       ruler: ruler
     s3:
-      endpoint: http://minio-service.minio.svc.cluster.local:9000
-      secretAccessKey: PcXs3BeFFe6WgS3DDVI5c3pUpv0z2XdsdJDDKzJn
-      accessKeyId: lX8LS99O1unjF8LbTMUN
+      endpoint: http://minio-service.minio.svc:9000
+      secretAccessKey: LWBPpaCEYDnYFX6QUL0v21Dd6LKiWvbk4E5cfBIq
+      accessKeyId: A3UhS0icgTX4lEHK9fp6
       s3ForcePathStyle: true
       insecure: false
       http_config: {}

@@ -6,7 +6,8 @@ metadata:
 spec:
   parentRefs:
     - name: observability-gateway
-      sectionName: https
+      sectionName: tls # 对应 Gateway 的监听器名称
+      namespace: default
   hostnames:
     - "jaeger-grpc.app.com"
   rules:

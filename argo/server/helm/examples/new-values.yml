@@ -1,7 +1,7 @@
 global:
   # -- Default domain used by all components
   ## Used for ingresses, certificates, SSO, notifications, etc.
-  domain: argocd.example.com
+  domain: argocd.app.com
   image:
     # -- If defined, a repository applied to all Argo CD deployments
     repository: quay.io/argoproj/argocd
@@ -17,17 +17,8 @@ server:
 
   # -- The number of server pods to run
   replicas: 1
-  httproute:
-    # -- Enable HTTPRoute resource for Argo CD server (Gateway API)
-    enabled: true
-    # -- Additional HTTPRoute labels
-    labels: {}
-    # -- Additional HTTPRoute annotations
-    annotations: {}
-    # -- Gateway API parentRefs for the HTTPRoute
-    ## Must reference an existing Gateway
-    # @default -- `[]` (See [values.yaml])
-    parentRefs:
-      - name: cilium-gateway
-        namespace: default
-        sectionName: http
+  service:
+    type: ClusterIP
+  # 不使用TLS
+  extraArgs:
+    - --insecure
