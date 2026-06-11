@@ -1,0 +1,46 @@
+# Strimzi 算是一个庞大的 JVM 系 Operator，控制着你的 Kafka 集群。
+# 为了不让它在运行时因为资源抖动而误判 Kafka 状态，采用 Initial 模式。
+
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: strimzi-cluster-operator-vpa
+  namespace: kafka
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: strimzi-cluster-operator
+  updatePolicy:
+    updateMode: "Initial"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: "*"
+        minAllowed:
+          cpu: "50m"
+          memory: "256Mi"
+        maxAllowed:
+          cpu: "300m"
+          memory: "512Mi"
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: my-cluster-entity-operator-vpa
+  namespace: kafka
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-cluster-entity-operator
+  updatePolicy:
+    updateMode: "Initial"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: "*"
+        minAllowed:
+          cpu: "30m"
+          memory: "128Mi"
+        maxAllowed:
+          cpu: "200m"
+          memory: "384Mi"

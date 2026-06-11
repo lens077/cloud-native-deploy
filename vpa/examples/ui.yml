@@ -1,3 +1,6 @@
+# 观测与可视化组件 (Grafana, Jaeger, Kibana, Kafka-UI)
+# 这些Web UI 或数据收集端，只有当你打开浏览器看监控、或者有流量时才需要资源。
+
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
 metadata:
@@ -41,28 +44,6 @@ spec:
         maxAllowed:
           cpu: "400m"
           memory: "512Mi"
----
-apiVersion: autoscaling.k8s.io/v1
-kind: VerticalPodAutoscaler
-metadata:
-  name: kibana-vpa
-  namespace: elastic-stack
-spec:
-  targetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: es-kb-quickstart-eck-kibana-kb
-  updatePolicy:
-    updateMode: "InPlace"
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        minAllowed:
-          cpu: "100m"
-          memory: "300Mi"
-        maxAllowed:
-          cpu: "600m"
-          memory: "1Gi" # Kibana 是 Node.js 写的，比较吃内存，卡死 1G 上限
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler

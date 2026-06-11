@@ -1,0 +1,22 @@
+# Minio 作为轻量对象存储后端，可以使用 InPlace 随流量无感呼吸。
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: minio-vpa
+  namespace: minio
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: minio
+  updatePolicy:
+    updateMode: "InPlace" # 允许原地扩缩
+  resourcePolicy:
+    containerPolicies:
+      - containerName: "*"
+        minAllowed:
+          cpu: "50m"
+          memory: "128Mi"
+        maxAllowed:
+          cpu: "400m"
+          memory: "512Mi"

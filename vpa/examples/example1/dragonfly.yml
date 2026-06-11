@@ -1,0 +1,14 @@
+# Dragonfly 作为有状态的高性能缓存，
+# 一般允许 VPA 乱动
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: dragonfly-vpa
+  namespace: dragonfly
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: dragonfly
+  updatePolicy:
+    updateMode: "Off" # 纯监控推荐值，严禁 VPA 修改内存型缓存

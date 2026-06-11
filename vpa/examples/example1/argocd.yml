@@ -1,5 +1,8 @@
-# argocd-vpas.yaml
----
+# 适用对象：无状态、有流量时资源飙升、平时发呆的 UI 界面、网关、链路追踪和核心控制器。
+#优势：利用 K8s 原地动态调整 cgroup，绝不重启 Pod，非常适合你用来压榨这 21GB 的内网资源。
+#
+#ArgoCD 核心组件 (代码仓库与服务网关)
+#ArgoCD 在 Git 轮询和 UI 刷新时会突发消耗资源。
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
 metadata:
@@ -11,16 +14,16 @@ spec:
     kind: Deployment
     name: argocd-server
   updatePolicy:
-    updateMode: "InPlaceOrRecreate"
+    updateMode: "InPlace" # 统一采用无感原地扩缩
   resourcePolicy:
     containerPolicies:
       - containerName: "*"
         minAllowed:
           cpu: "50m"
-          memory: 128Mi
+          memory: "100Mi" # 降至 100Mi 启动，省下内存给业务
         maxAllowed:
-          cpu: "500m"
-          memory: 1Gi
+          cpu: "300m"
+          memory: "400Mi" # 400Mi 足够应对多用户同时访问 UI
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -33,16 +36,16 @@ spec:
     kind: Deployment
     name: argocd-repo-server
   updatePolicy:
-    updateMode: "InPlaceOrRecreate"
+    updateMode: "InPlace"
   resourcePolicy:
     containerPolicies:
       - containerName: "*"
         minAllowed:
           cpu: "50m"
-          memory: 128Mi
+          memory: "128Mi"
         maxAllowed:
-          cpu: "1"
-          memory: 2Gi
+          cpu: "500m"     # 拒绝 1C，严控在 0.5C
+          memory: "600Mi" # 拒绝 2Gi 吞噬弹夹！600Mi 足够内网全栈清单解析
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -55,16 +58,16 @@ spec:
     kind: Deployment
     name: argocd-applicationset-controller
   updatePolicy:
-    updateMode: "InPlaceOrRecreate"
+    updateMode: "InPlace"
   resourcePolicy:
     containerPolicies:
       - containerName: "*"
         minAllowed:
-          cpu: "50m"
-          memory: 128Mi
+          cpu: "30m"
+          memory: "128Mi"
         maxAllowed:
-          cpu: "500m"
-          memory: 512Mi
+          cpu: "300m"
+          memory: "256Mi" # 裁剪至 256Mi，内网单集群不需要 512Mi
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -77,16 +80,16 @@ spec:
     kind: Deployment
     name: argocd-dex-server
   updatePolicy:
-    updateMode: "InPlaceOrRecreate"
+    updateMode: "InPlace"
   resourcePolicy:
     containerPolicies:
       - containerName: "*"
         minAllowed:
-          cpu: "50m"
-          memory: 128Mi
+          cpu: "30m"
+          memory: "64Mi"
         maxAllowed:
-          cpu: "500m"
-          memory: 512Mi
+          cpu: "200m"
+          memory: "128Mi" # 仅负责内网 OIDC 登录，128Mi 顶天了
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -99,16 +102,16 @@ spec:
     kind: Deployment
     name: argocd-notifications-controller
   updatePolicy:
-    updateMode: "InPlaceOrRecreate"
+    updateMode: "InPlace"
   resourcePolicy:
     containerPolicies:
       - containerName: "*"
         minAllowed:
-          cpu: "50m"
-          memory: 128Mi
+          cpu: "20m"
+          memory: "64Mi"
         maxAllowed:
-          cpu: "500m"
-          memory: 512Mi
+          cpu: "200m"
+          memory: "128Mi" # 仅负责通知推送，极限压榨其上限
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -121,13 +124,13 @@ spec:
     kind: Deployment
     name: argocd-redis
   updatePolicy:
-    updateMode: "InPlaceOrRecreate"
+    updateMode: "InPlace"
   resourcePolicy:
     containerPolicies:
       - containerName: "*"
         minAllowed:
           cpu: "50m"
-          memory: 128Mi
+          memory: "128Mi"
         maxAllowed:
-          cpu: "500m"
-          memory: 1Gi
+          cpu: "400m"
+          memory: "512Mi" # 拒绝 1Gi。作为 Argo 的状态缓存，512Mi 绰绰有余
